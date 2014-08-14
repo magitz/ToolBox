@@ -19,5 +19,5 @@ Some description of the scripts:
 
 * **MFAtoPHY.pl** -- a handy script from [Yu-Wei Wu](http://yuweibioinfo.blogspot.com/2009/01/fasta-to-phylip-converter.html) to convert a fasta file to a phylip file.
 
-
+* **nex_to_phy.py** -- A simple converter from Nexus to Phylip format using BioPython.
 
