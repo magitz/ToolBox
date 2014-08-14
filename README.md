@@ -15,7 +15,7 @@ Some description of the scripts:
 
 * **compute_consensus_from_mafft.pl** -- take aligned fasta file (like a MAFFT ouput) and creats a single consensus sequence, using ambiguity codes in regions of overlap. Most of the code was stolen from part of a similar script by [Joseph Hughes](https://github.com/josephhughes/Sequence-manipulation/blob/master/Consensus.pl).
 
-* fasta_to_phy.pl** -- Convert a fasta file (aligned hopefully!) to (relaxed) phylip format.
+* **fasta_to_phy.pl** -- Convert a fasta file (aligned hopefully!) to (relaxed) phylip format.
 
 * **MFAtoPHY.pl** -- a handy script from [Yu-Wei Wu](http://yuweibioinfo.blogspot.com/2009/01/fasta-to-phylip-converter.html) to convert a fasta file to a phylip file.
 
