@@ -17,6 +17,8 @@ Some description of the scripts:
 
 * **fasta_to_phy.pl** -- Convert a fasta file (aligned hopefully!) to (relaxed) phylip format.
 
+* **GenBank_parser.py** --Takes input of list of NCBI record IDs to fetch. Downloads these records and parses the CDSs out, putting them into fasta files named by the annotations.
+ 
 * **MFAtoPHY.pl** -- a handy script from [Yu-Wei Wu](http://yuweibioinfo.blogspot.com/2009/01/fasta-to-phylip-converter.html) to convert a fasta file to a phylip file.
 
 * **nex_to_phy.py** -- A simple converter from Nexus to Phylip format using BioPython.
