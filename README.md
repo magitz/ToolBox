@@ -21,3 +21,4 @@ Some description of the scripts:
 
 * **nex_to_phy.py** -- A simple converter from Nexus to Phylip format using BioPython.
 
+* **tally_occurrences.py** -- Tallies the occurrences of a list of species in an occurrence.txt file downloaded from GBIF.
