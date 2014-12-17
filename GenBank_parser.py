@@ -2,6 +2,9 @@
 import argparse
 from Bio import Entrez
 from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
+from Bio.Alphabet import IUPAC
 
 # =====================================================
 #  Takes input of list of NCBI record IDs to fetch. 
@@ -57,16 +60,27 @@ for Line in IN:
 				Gene= Feature.qualifiers["gene"]
 				GeneFile= str(Gene[0]) + '.fna' #Name files by CDS name
 				
+				GeneFileAA= str(Gene[0]) + '.faa' #Name files by CDS name--Also get the translation
+				
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
 					print "Can't open file to append", GeneFile
 					
+				try:
+					OUTAA=open(GeneFileAA, 'a')
+				except IOError:
+					print "Can't open file to append", GeneFileAA
+					
+					
 				SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS
 				
+				SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0], IUPAC.protein), id=Sequence.id, description=Sequence.description)
+					
 				#For some reason many are returning Unknown IDs and Descriptions. Fix these.
 				if SeqNuc.id == '<unknown id>':
 					SeqNuc.id= Sequence.id
 					SeqNuc.description = Sequence.description
 										
 				SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
+				SeqIO.write(SeqAA, OUTAA, "fasta")
