@@ -21,6 +21,8 @@ Some description of the scripts:
  
 * **MFAtoPHY.pl** -- a handy script from [Yu-Wei Wu](http://yuweibioinfo.blogspot.com/2009/01/fasta-to-phylip-converter.html) to convert a fasta file to a phylip file.
 
-* **nex_to_phy.py** -- A simple converter from Nexus to Phylip format using BioPython.
+* **nex_to_fasta.py** -- A simple converter from Nexus to Fasta format using BioPython.
+
+* **nex_to_phy.py** -- A simple converter from Nexus to relaxed-Phylip format using BioPython.
 
 * **tally_occurrences.py** -- Tallies the occurrences of a list of species in an occurrence.txt file downloaded from GBIF.
