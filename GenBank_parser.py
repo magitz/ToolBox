@@ -22,17 +22,19 @@ from Bio.Alphabet import IUPAC
 #
 # -i input file with list of NCBI record IDs.
 # -e email address used for Entrez
-#
+# -p parse orfs? Default= 0
 #####################
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help="input file with GenBank accession IDs")
 parser.add_argument("-e", help="email address")
+parser.add_argument("-p", help="Parse ORFS? Default=0 (no)", default=0)
 
 args = parser.parse_args()
 
 infile = args.i
 Entrez.email = args.e
+ORFS= args.p
 
 try:
 	IN=open(infile, 'r')
@@ -57,30 +59,54 @@ for Line in IN:
 		# Look at the CDSs and extract them
 		for Feature in Sequence.features:
 			if Feature.type == 'CDS' :
-				Gene= Feature.qualifiers["gene"]
-				GeneFile= str(Gene[0]) + '.fna' #Name files by CDS name
+				try:  # Most CDS have a gene annotation.
+					Gene= Feature.qualifiers["gene"]
+					Gene= str(Gene[0]) # Gene is actually a list, so convert to string
+					Gene = Gene[0].lower() + Gene[1:] #Convert 1st letter to lower case.
+													# Had a lot of problems with some having atpA and others AtpA
+													# This fixes that.
+				except: # But if not, we need to handle them.
+					try: # Many that are not annotated as gene are annotated with note
+						Gene= Feature.qualifiers["note"]
+						if type(Gene) is list:	#Some of these are lists, some are strings...
+							Gene=str(Gene[0])
+						Gene=Gene.replace("label: ","") #Clean up some where label: is part of the name.
+						Gene = Gene[0].lower() + Gene[1:] #Convert 1st letter to lower case.
+						
+					except: #If we still can't get it, put in unknown.
+						Gene= "unknown"
+						print "Error parsing gene from CDS: ", Feature
 				
-				GeneFileAA= str(Gene[0]) + '.faa' #Name files by CDS name--Also get the translation
+				Gene=Gene.replace(" ", "_") #Clean up the name, replacing any spaces with underscores.
 				
-				try:
-					OUT=open(GeneFile, 'a')
-				except IOError:
-					print "Can't open file to append", GeneFile
-					
-				try:
-					OUTAA=open(GeneFileAA, 'a')
-				except IOError:
-					print "Can't open file to append", GeneFileAA
-					
-					
-				SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS
+				if Gene[:3] != "orf" or ORFS==1: #if the gene name starts with orf, skip it unless user has opted to parse them.
+					GeneFile= Gene + '.fna' #Name files by CDS name
 				
-				SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0], IUPAC.protein), id=Sequence.id, description=Sequence.description)
+					GeneFileAA= Gene + '.faa' #Name files by CDS name--Also get the translation
+				
+					try:
+						OUT=open(GeneFile, 'a')
+					except IOError:
+						print "Can't open file to append", GeneFile
 					
-				#For some reason many are returning Unknown IDs and Descriptions. Fix these.
-				if SeqNuc.id == '<unknown id>':
-					SeqNuc.id= Sequence.id
-					SeqNuc.description = Sequence.description
+					try:
+						OUTAA=open(GeneFileAA, 'a')
+					except IOError:
+						print "Can't open file to append", GeneFileAA
+					
+					try:	
+						SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS
+					except:
+						print "Can't get sequence for ", Gene	#Handle problems.
+					
+					SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0], IUPAC.protein), id=Sequence.id, description=Sequence.description)
+					
+					#For some reason many are returning Unknown IDs and Descriptions. Fix these.
+					if SeqNuc.id == '<unknown id>':
+						SeqNuc.id= Sequence.id
+						SeqNuc.description = Sequence.description
 										
-				SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
-				SeqIO.write(SeqAA, OUTAA, "fasta")
+					SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
+					SeqIO.write(SeqAA, OUTAA, "fasta")
+				else:
+					print "Skipping ", Gene #Let the user know an orf was skipped.
