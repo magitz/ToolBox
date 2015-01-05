@@ -14,6 +14,15 @@ from Bio.Alphabet import IUPAC
 #  Matt Gitzendanner
 #  University of Florida
 #  12/17/14
+#
+# Version 1.1: 1/5/15
+#	-Added handling of multiple sequences with the same annotation.
+#		By default genes with the same name in a sample will have a _copy_# added to everything after the 1st copy.
+#		Set to 1 to exclude subsequent copies from the results files. Only the first is reported.
+#	-Added testing for different cases of gene names. Uses the first one
+#		for all subsequent samples, so pick the first sample carefully.
+#		e.g. if the first sample has ccmFC and others have ccmFc, they will
+#		be added to the ccmFC file.
 # =====================================================
 
 
@@ -23,25 +32,29 @@ from Bio.Alphabet import IUPAC
 # -i input file with list of NCBI record IDs.
 # -e email address used for Entrez
 # -p parse orfs? Default= 0
+# -d exclude duplicate copies? Default=0
 #####################
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help="input file with GenBank accession IDs")
 parser.add_argument("-e", help="email address")
 parser.add_argument("-p", help="Parse ORFS? Default=0 (no)", default=0)
-
+parser.add_argument("-d", help="Exclude duplicate copies of genes? Default=0 (no)", default=0)
 args = parser.parse_args()
 
 infile = args.i
 Entrez.email = args.e
 ORFS= args.p
+ExclDups= int(args.d)
 
 try:
 	IN=open(infile, 'r')
 except IOError:
 	print "Can't open file", infile
 
-
+Gene_dict={} # Keep track of all the genes we've found. Keys are lowercase version, 
+			 #  values are the case as found in the first sample where the gene is found.
+			 
 for Line in IN:
 	Line.strip('\n')
 	print "Getting %s" %(Line)
@@ -56,22 +69,20 @@ for Line in IN:
 		
 		print "Parsing CDSs...\n\n"
 		
+		Sample_gene_dict={} #Clear the dict for tracking genes found in each sample.
 		# Look at the CDSs and extract them
 		for Feature in Sequence.features:
 			if Feature.type == 'CDS' :
 				try:  # Most CDS have a gene annotation.
 					Gene= Feature.qualifiers["gene"]
 					Gene= str(Gene[0]) # Gene is actually a list, so convert to string
-					Gene = Gene[0].lower() + Gene[1:] #Convert 1st letter to lower case.
-													# Had a lot of problems with some having atpA and others AtpA
-													# This fixes that.
+					
 				except: # But if not, we need to handle them.
 					try: # Many that are not annotated as gene are annotated with note
 						Gene= Feature.qualifiers["note"]
 						if type(Gene) is list:	#Some of these are lists, some are strings...
 							Gene=str(Gene[0])
 						Gene=Gene.replace("label: ","") #Clean up some where label: is part of the name.
-						Gene = Gene[0].lower() + Gene[1:] #Convert 1st letter to lower case.
 						
 					except: #If we still can't get it, put in unknown.
 						Gene= "unknown"
@@ -79,10 +90,18 @@ for Line in IN:
 				
 				Gene=Gene.replace(" ", "_") #Clean up the name, replacing any spaces with underscores.
 				
-				if Gene[:3] != "orf" or ORFS==1: #if the gene name starts with orf, skip it unless user has opted to parse them.
-					GeneFile= Gene + '.fna' #Name files by CDS name
+				if Gene.lower() not in Gene_dict.keys():
+					Gene_dict[Gene.lower()]=Gene		#if we haven't found this gene yet, add it ot the Gene_dict
+														#with key as lowercase version and value as slightly cleaned up version we found.
+				try:
+					Sample_gene_dict[Gene.lower()] += 1 #Increment if we've already seen this gene in this sample.
+				except KeyError:
+					Sample_gene_dict[Gene.lower()] = 1 #If we haven't seen this gene in this sample yet, add it to the Sample_gene_dict
+					
+				if Gene[:3].lower() != "orf" or ORFS==1: #if the gene name starts with orf, skip it unless user has opted to parse them.
+					GeneFile= Gene_dict[Gene.lower()] + '.fna' #Name files by CDS name using the case as found the first time the gene was found.
 				
-					GeneFileAA= Gene + '.faa' #Name files by CDS name--Also get the translation
+					GeneFileAA= Gene_dict[Gene.lower()] + '.faa' #Name files by CDS name--Also get the translation
 				
 					try:
 						OUT=open(GeneFile, 'a')
@@ -105,8 +124,21 @@ for Line in IN:
 					if SeqNuc.id == '<unknown id>':
 						SeqNuc.id= Sequence.id
 						SeqNuc.description = Sequence.description
-										
-					SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
-					SeqIO.write(SeqAA, OUTAA, "fasta")
+					
+					if Gene != "unknown" and (Sample_gene_dict[Gene.lower()] > 1 and ExclDups == 0):	#If there's multiple copies, and we want them reported (skip unknowns since they aren't likely the same gene
+						
+						#Add _copy_# to the end of the name	
+						SeqNuc.id = SeqNuc.id + "_copy_" + str(Sample_gene_dict[Gene.lower()])
+						SeqAA.id = SeqAA.id	+ "_copy_" + str(Sample_gene_dict[Gene.lower()])
+						
+						SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
+						SeqIO.write(SeqAA, OUTAA, "fasta")
+					
+					elif Gene != "unknown" and (Sample_gene_dict[Gene.lower()] > 1 and ExclDups == 1):	#If there's multiple copies and we don't want them reported, let the user know.
+						print "Copy %s of %s being excluded for %s" %(str(Sample_gene_dict[Gene.lower()]), Gene_dict[Gene.lower()], SeqNuc.id)
+						
+					else:
+						SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
+						SeqIO.write(SeqAA, OUTAA, "fasta")
 				else:
 					print "Skipping ", Gene #Let the user know an orf was skipped.
