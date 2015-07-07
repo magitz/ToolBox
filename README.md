@@ -26,3 +26,7 @@ Some description of the scripts:
 * **nex_to_phy.py** -- A simple converter from Nexus to relaxed-Phylip format using BioPython.
 
 * **tally_occurrences.py** -- Tallies the occurrences of a list of species in an occurrence.txt file downloaded from GBIF.
+
+* **seperate_genes_to_files.py** -- Takes an input fasta file with multiple genes from a species and splits that into gene files. Fasta records are assumed to be named by the gene name. Input file is assumed to be the species name. Appends record to gene file using the species name.
+
+
