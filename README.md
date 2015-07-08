@@ -7,6 +7,8 @@ I've provided attribution where I can remember I took code bits from somewhere. 
 
 Some description of the scripts:
 
+* **alignment_codon_parses.py** -- Create datasets by codon and 1st and 2nd position from an input nucleotide alignment.
+
 * **BLASTPaser.pl** -- is a simple parser for BLAST output. The script is based on the [BioPerl SearchIO tutorial](http://www.bioperl.org/wiki/HOWTO:SearchIO).
 
 * **BLASTParser_table.pl** -- is the same as above, but for tabular BLAST output.
