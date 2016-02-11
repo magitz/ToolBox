@@ -3,6 +3,7 @@ import argparse
 from Bio import Entrez
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
+from Bio import SeqFeature
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 
@@ -15,6 +16,9 @@ from Bio.Alphabet import IUPAC
 #  University of Florida
 #  12/17/14
 #
+# Version 1.2: 2/10/16
+#   -Added option to include a certain number of base pairs upstream and downstream of the annotated gene.
+#       Note that in this may include other annotated reagions.
 # Version 1.1: 1/5/15
 #	-Added handling of multiple sequences with the same annotation.
 #		By default genes with the same name in a sample will have a _copy_# added to everything after the 1st copy.
@@ -31,21 +35,38 @@ from Bio.Alphabet import IUPAC
 #
 # -i input file with list of NCBI record IDs.
 # -e email address used for Entrez
+# -n Name sample with description? Takes description field, removes spaces and adds to id field.
 # -p parse orfs? Default= 0
 # -d exclude duplicate copies? Default=0
+# -f Include flanking region +/- # of bp. Default=0
 #####################
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help="input file with GenBank accession IDs")
 parser.add_argument("-e", help="email address")
+parser.add_argument("-n", help="Name sample with description? Takes description field, removes spaces and adds to id field. Default= 1 (yes), use 0 for no.", default=1)
 parser.add_argument("-p", help="Parse ORFS? Default=0 (no)", default=0)
 parser.add_argument("-d", help="Exclude duplicate copies of genes? Default=0 (no)", default=0)
+parser.add_argument("-f", help="Include flanking region +/- # of bp. Default=0", default=0)
+
 args = parser.parse_args()
 
 infile = args.i
 Entrez.email = args.e
 ORFS= args.p
+AddDescription= int(args.n)
 ExclDups= int(args.d)
+Flanking= int(args.f)
+
+# Function to get overlap in intervals. From: http://stackoverflow.com/questions/2953967/built-in-function-for-computing-overlap-in-python
+def getOverlap(a, b):
+	return max(0, min(a[1], b[1]) - max(a[0], b[0]))
+
+def addDescriptionToName(id, description):
+	description_bits=description.split()[0:2] #get 1st 2 words from description (Geneus and species)
+	id= "_".join(description_bits) + "_" + id
+
+	return id
 
 try:
 	IN=open(infile, 'r')
@@ -113,8 +134,47 @@ for Line in IN:
 					except IOError:
 						print "Can't open file to append", GeneFileAA
 					
+					############
+					# Manage getting flanking regions.
+					############
+					#print ("Feature location is: %s" %(Feature.location))
+					Flanking_start=Feature.location.start.position - Flanking #Subtract from start
+					Flanking_end=Feature.location.end.position + Flanking #Add to end
+					
+					Flanking_location= SeqFeature.FeatureLocation(Flanking_start, Flanking_end, Feature.location.strand)
+					Feature.location = Flanking_location
+					#print ("With flanking, feature location is: %s" %(Feature.location))
+					
+					try: del Add_to_name #Clear the Add_to_name variable
+					except: pass
+						
+					# Check if the expanded Feature.location now includes another CDS
+					for OtherGenes in Sequence.features:
+						if OtherGenes.type == 'CDS' :
+							try:  # Most CDS have a gene annotation.
+								OtherGene= OtherGenes.qualifiers["gene"]
+								OtherGene= str(OtherGene[0]) # Gene is actually a list, so convert to string
+							except:
+								pass
+
+							if not Gene.lower() == OtherGene.lower():
+													
+								Overlap= getOverlap([Flanking_start, Flanking_end], [OtherGenes.location.start.position, OtherGenes.location.end.position])
+							
+								if Overlap > 0:
+									#print ("Expanded flanking region for %s includes %s, adding to name of file" %(Gene.lower(), OtherGene))
+									try: Add_to_name=Add_to_name + "_" + OtherGene.lower()
+									except: Add_to_name= "_" + Gene + "_with_" + OtherGene.lower()
+					
+					#Report what genes were added to the resulting files by expanding the flanking region.
+					try:
+						print ("For gene %s, flanking region includes %s" %(Gene, Add_to_name))			
+					except:
+						pass
+						
+						
 					try:	
-						SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS
+						SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS	
 					except:
 						print "Can't get sequence for ", Gene	#Handle problems.
 					
@@ -131,6 +191,17 @@ for Line in IN:
 						SeqNuc.id = SeqNuc.id + "_copy_" + str(Sample_gene_dict[Gene.lower()])
 						SeqAA.id = SeqAA.id	+ "_copy_" + str(Sample_gene_dict[Gene.lower()])
 						
+						SeqNuc.id= addDescriptionToName(SeqNuc.id, SeqNuc.description)
+						SeqAA.id= addDescriptionToName(SeqAA.id, SeqAA.description)
+						
+						
+						try:		#If we have added other regions vy including flanking region, add these to the name of the sequence so user knows.
+									#Only do this for nuclear data as AA data is just the original gene.
+							SeqNuc.id = SeqNuc.id + Add_to_name
+						except: pass
+
+						
+						
 						SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
 						SeqIO.write(SeqAA, OUTAA, "fasta")
 					
@@ -138,6 +209,15 @@ for Line in IN:
 						print "Copy %s of %s being excluded for %s" %(str(Sample_gene_dict[Gene.lower()]), Gene_dict[Gene.lower()], SeqNuc.id)
 						
 					else:
+						
+						SeqNuc.id= addDescriptionToName(SeqNuc.id, SeqNuc.description)
+						SeqAA.id= addDescriptionToName(SeqAA.id, SeqAA.description)
+						
+						try:		#If we have added other regions vy including flanking region, add these to the name of the sequence so user knows.
+									#Only do this for nuclear data as AA data is just the original gene.
+							SeqNuc.id = SeqNuc.id + Add_to_name
+						except: pass
+
 						SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
 						SeqIO.write(SeqAA, OUTAA, "fasta")
 				else:
