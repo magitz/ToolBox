@@ -138,9 +138,15 @@ for Line in IN:
 					# Manage getting flanking regions.
 					############
 					#print ("Feature location is: %s" %(Feature.location))
-					Flanking_start=Feature.location.start.position - Flanking #Subtract from start
-					Flanking_end=Feature.location.end.position + Flanking #Add to end
 					
+					Flanking_start=Feature.location.start.position - Flanking #Subtract from start
+					if Flanking_start < 1:		#Handle going past the beginning of the sequence
+						Flanking_start = 1
+						
+					Flanking_end=Feature.location.end.position + Flanking #Add to end
+					if Flanking_end > len(Sequence):
+						Flanking_end = len(Sequence)	#Handle going past the end of the Sequence
+						
 					Flanking_location= SeqFeature.FeatureLocation(Flanking_start, Flanking_end, Feature.location.strand)
 					Feature.location = Flanking_location
 					#print ("With flanking, feature location is: %s" %(Feature.location))
