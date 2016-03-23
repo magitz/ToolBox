@@ -5,6 +5,8 @@ Various scripts for bioinformatics/phyloinformatics/etc that I've put together/s
 
 I've provided attribution where I can remember I took code bits from somewhere. If there's something that's your's I'm happy to add attribution or take it down if I accidentally violated the license.
 
+See the [GenBankTools](GenBenkTools/README.md) folder for info on those scripts.
+
 Some description of the scripts:
 
 * **alignment_codon_parses.py** -- Create datasets by codon and 1st and 2nd position from an input nucleotide alignment.
@@ -18,8 +20,6 @@ Some description of the scripts:
 * **compute_consensus_from_mafft.pl** -- take aligned fasta file (like a MAFFT ouput) and creats a single consensus sequence, using ambiguity codes in regions of overlap. Most of the code was stolen from part of a similar script by [Joseph Hughes](https://github.com/josephhughes/Sequence-manipulation/blob/master/Consensus.pl).
 
 * **fasta_to_phy.pl** -- Convert a fasta file (aligned hopefully!) to (relaxed) phylip format.
-
-* **GenBank_parser.py** --Takes input of list of NCBI record IDs to fetch. Downloads these records and parses the CDSs out, putting them into fasta files named by the annotations.
  
 * **MFAtoPHY.pl** -- a handy script from [Yu-Wei Wu](http://yuweibioinfo.blogspot.com/2009/01/fasta-to-phylip-converter.html) to convert a fasta file to a phylip file.
 
