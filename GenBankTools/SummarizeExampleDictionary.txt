@@ -1,0 +1,67 @@
+##############################################################################
+# Input file fore GenBank_summarize.py
+#	Matt Gitzendanner, University of Florida.
+#
+#	Use this file to define the genes/regions searched for by the script.
+#
+#	On each line list a name of the region, followed by a colon and a comma
+#	separated list of search terms to use to match that gene/region.
+#	For example:
+#		ITS: internal transcribed spacer,ITS
+#		
+#	The list will be searched in the order entered, and will stop once the 
+#	first search term is found. This allows you to search for a term like
+#	trnL-trnF followed by just trnL.
+#
+#	Search terms are case sensitive.
+#
+#	Results will also be printed in the order listed here, so if search order
+#	allows it, you can sort genes/regions in the order you want the results.
+#
+# 	Lines starting with # will be ignored.
+#	Leave the two lines in square brakets alone and at the start of the section.
+##############################################################################
+
+##############################################################################
+# 	List of search strings to search the GenBenk source field of the record.
+#	This list is used to count things like plastid origin. If found, the items
+#	in this list are counted, but that is all. The processing continues to the	
+#	list below to sort and tally. 
+##############################################################################
+[Source Tally]
+Plastid: plastid, chloroplast
+
+
+##############################################################################
+#	The list of genes/regions to sort and tally.
+#	Note if the search string has a comma, escape it with a \:
+#		e.g.: rbcL: rbcL,rbcl,ribulose-1\,5-biophosphate
+##############################################################################
+[Description Tally and Sort]
+trnL-trnF_intergenic_spacer: trnL-trnF
+trnT-trnL_intergenic_spacer: trnT-trnL
+ITS: internal transcribed spacer,ITS
+ETS: external transcribed spacer,ETS
+18S: 18S
+26S: 26S
+atpB-rbcL_spacer: atpB-rbcL,rbcL-atpB
+atpA: atpA,atpa
+atpB: atpB,atpb
+atpF: atpF,atpf
+rbcL: rbcL,rbcl,ribulose-1\,5-biophosphate
+trnL: trnL,trnl
+matK: matK,matk,maturase K,maturase k
+ndhF: ndhF,ndhf
+ndhA: ndhA,ndha
+rpl16: rpL16,rpL16
+rps16: rps16,rpS16
+ycf1: ycf1
+ycf2: ycf2
+psbA-trnH_spacer: psbA-trnH
+petB-petD_spacer: petB-petD
+trnC-pet1N_spacer: trnC-pet1N
+trnS-trnG_spacer: trnS-trnG
+trnY-trnT_spacer: trnY-trnT
+LEAFY: LEAFY
+NIA: NIA
+microsatellite: microsatellite
