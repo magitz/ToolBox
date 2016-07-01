@@ -43,7 +43,7 @@ parser.add_argument("-o", help="directory for output files, needs to exists")
 parser.add_argument("-s", help="Name of summary file with counts for plastid and each gene")
 parser.add_argument("-m", help="Minimum length for a seqeunce to be counted, default=0, no cutoff", default=0)
 parser.add_argument("-l", help="Log file name")
-parser.add_argument("-v", help="Verbosity, 0=very little, mostly just errors; 1=defualt; 2=lots", default=1)
+parser.add_argument("-v", help="Verbosity, 0=very little, mostly just errors; 1=default; 2=lots", default=1)
 
 args = parser.parse_args()
 
@@ -53,7 +53,7 @@ OutDir= args.o
 SummaryFile= args.s
 MinLength= int(args.m)
 LogFile= args.l
-Verbose=args.int(v)
+Verbose=int(args.v)
 
 
 def GeneOccurence(Gene, SearchList):
@@ -217,7 +217,7 @@ SUMMARY.write(Taxon + ",")
 LOG.write("\n\n#########  Header Line for summary file ####################\n\n")
 LOG.write("Taxon,")
 
-print SourceOrdDict
+#print SourceOrdDict
 for k, v in SourceOrdDict.items():
 	try:
 		LOG.write(str(k) + ",")
