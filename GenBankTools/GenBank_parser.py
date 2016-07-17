@@ -107,7 +107,7 @@ for Line in IN:
 						
 					except: #If we still can't get it, put in unknown.
 						Gene= "unknown"
-						print "Error parsing gene from CDS: ", Feature
+						print "Unable to parse gene name from CDS, putting in unknown file."
 				
 				Gene=Gene.replace(" ", "_") #Clean up the name, replacing any spaces with underscores.
 				
