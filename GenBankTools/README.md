@@ -1,5 +1,4 @@
-ToolBox: GenBankTools
-=======
+# ToolBox: GenBankTools
 
 Various scripts mostly scripts for querying GenBank or analyzing GenBank files to extract data.
 
