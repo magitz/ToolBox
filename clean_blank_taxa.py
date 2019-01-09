@@ -36,8 +36,10 @@ for line in myfile:
 		
 out=open(args.outfile, 'w')
 
+# Create phylip header line with # of taxa and characters
 myline=str(tax_count) + " " + chars + "\n"
 
+# Addd sequences
 out.write(myline)
 for item in keep_list:
 	out.write(item)
