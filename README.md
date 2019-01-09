@@ -1,11 +1,15 @@
 ToolBox
 =======
 
-Various scripts for bioinformatics/phyloinformatics/etc that I've put together/stollen/borrowed over time
+Various scripts for bioinformatics/phyloinformatics/etc that I've put together/stollen/borrowed over time.
 
 I've provided attribution where I can remember I took code bits from somewhere. If there's something that's your's I'm happy to add attribution or take it down if I accidentally violated the license.
 
-See the [GenBankTools](GenBankTools/) folder for info on those scripts.
+
+The [GenBankTools](GenBankTools/) folder has scripts for interacting with GenBank records.
+
+The [converters](converters/) folder has tools to convert files from one format to another. Most of these are sequence file converters.
+
 
 Some description of the scripts:
 
