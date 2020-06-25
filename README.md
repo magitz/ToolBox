@@ -20,6 +20,8 @@ Some description of the scripts in this directory:
 
 * **compute_consensus_from_mafft.pl** -- take aligned fasta file (like a MAFFT ouput) and creats a single consensus sequence, using ambiguity codes in regions of overlap. Most of the code was stolen from part of a similar script by [Joseph Hughes](https://github.com/josephhughes/Sequence-manipulation/blob/master/Consensus.pl).
 
+* **get_seqs_from_fasta.py** -- Get a set of sequences from an input fasta file and write to a new fasta file (can actually use different formats too, doesn't have to be fasta formatted).
+
 * **remove_gaps.py** -- removes all gaps from sequences in an input fasta file.
 
 * **remove_taxa.py** -- Removes taxa from a fasta file. Multiple taxa cna be designated with a comma separated list (no spaces).
