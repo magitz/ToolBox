@@ -1,18 +1,20 @@
-ToolBox
+# ToolBox
+
 =======
 
 Various scripts for bioinformatics/phyloinformatics/etc that I've put together/stollen/borrowed over time.
 
-I've provided attribution where I can remember I took code bits from somewhere. If there's something that's your's I'm happy to add attribution or take it down if I accidentally violated the license.
-
+I've provided attribution where I can remember I took code bits from somewhere. If there's something that's yours I'm happy to add attribution or take it down if I accidentally violated the license.
 
 The [GenBankTools](GenBankTools/) folder has scripts for interacting with GenBank records.
 
 The [converters](converters/) folder has tools to convert files from one format to another. Most of these are sequence and alignment file converters.
 
-The [BLASTTools](BLASTTools/) forlder has tool for parsing or analyzing BLAST output.
+The [BLASTTools](BLASTTools/) folder has tool for parsing or analyzing BLAST output.
 
-Some description of the scripts in this directory:
+The [SLURM_tools](SLURM_tools) folder has some scripts for managing and generating jobs under SLURM.
+
+## Some description of the scripts in this directory
 
 * **alignment_codon_parses.py** -- Create datasets by codon and 1st and 2nd position from an input nucleotide alignment.
 
@@ -26,8 +28,7 @@ Some description of the scripts in this directory:
 
 * **remove_taxa.py** -- Removes taxa from a fasta file. Multiple taxa cna be designated with a comma separated list (no spaces).
 
-* **seperate_genes_to_files.py** -- Takes an input fasta file with multiple genes from a species and splits that into gene files. Fasta records are assumed to be named by the gene name. Input file is assumed to be the species name. Appends record to gene file using the species name.
+* **separate_genes_to_files.py** -- Takes an input fasta file with multiple genes from a species and splits that into gene files. Fasta records are assumed to be named by the gene name. Input file is assumed to be the species name. Appends record to gene file using the species name.
 
 * **tally_occurrences.py** -- Tallies the occurrences of a list of species in an occurrence.txt file downloaded from GBIF.
-
 

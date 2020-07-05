@@ -162,7 +162,7 @@ def main():
     parser.add_argument('-m', '--model', help='Model of evolution to use', default='GTR+G')
     parser.add_argument('-t', '--template', help='Job script template to use', default='./RAxML_Gene_Tree.sbatch')
     parser.add_argument('-c', '--max_cpu', help='Max number of CPUs to request', default=32, type=int)
-    parser.add_argument('-b', '--mem_buffer', help='Memory buffer to raxml-ng estimate. Should be decimal value 0.0-1.0. Default is 0.15 (15%)', default=0.15, type=float)
+    parser.add_argument('-b', '--mem_buffer', help='Memory buffer to raxml-ng estimate. Should be decimal value 0.0-1.0. Default is 0.15 or 15 percent', default=0.15, type=float)
     parser.add_argument('-r', '--raxml', help='Path to raxml-ng. Required if not in your path.', default='raxml-ng')
     parser.add_argument('-n', '--no_use_rba', help='Do not use the binary MSA file created during parsing in analysis?', action='store_true', default=False)
     parser.add_argument('-s', '--submit', help='Submit jobs after creating job script?', action='store_true', default=False)
