@@ -29,6 +29,7 @@ Argument   | Description
 -c/--max_cpu | The maximum number of CPUs (cores) to allocate per job. If the RAxML-ng estimate is higher than this, the job script will limit to this value. Default: `32`.
 -b/--mem_buffer | Memory buffer to add to job memory requests over what RAxML-ng suggests. This is a percentage, e.g. 0.15 is 15%. **Note** a minimum of 100MB will always be requested. Default: `0.15`.
 -r/--raxml | path to raxml-ng executable. Default: `raxml-ng` (either same directory or in $PATH)
+-n/--no_use_rba | Do not use the binary alignment file generated in the `raxml-ng --parse` run in the submitted job script. In general, you probably want to use this file since it's already been generated, but there may be a reason not to.
 -s/--submit | Submit the jobs as they are generated. If not passed, job scripts are saved, but not submitted.
 -v/--verbose | Verbose output.
 
