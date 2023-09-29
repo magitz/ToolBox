@@ -16,9 +16,11 @@ from Bio.Alphabet import IUPAC
 #  University of Florida
 #  12/17/14
 #
+# Version 1.3: 9/29/23
+#   -Update prints for python3
 # Version 1.2: 2/10/16
 #   -Added option to include a certain number of base pairs upstream and downstream of the annotated gene.
-#       Note that in this may include other annotated reagions.
+#       Note that in this may include other annotated regions.
 # Version 1.1: 1/5/15
 #	-Added handling of multiple sequences with the same annotation.
 #		By default genes with the same name in a sample will have a _copy_# added to everything after the 1st copy.
@@ -71,24 +73,24 @@ def addDescriptionToName(id, description):
 try:
 	IN=open(infile, 'r')
 except IOError:
-	print "Can't open file", infile
+	print ("Can't open file", infile)
 
 Gene_dict={} # Keep track of all the genes we've found. Keys are lowercase version, 
 			 #  values are the case as found in the first sample where the gene is found.
 			 
 for Line in IN:
 	Line.strip('\n')
-	print "Getting %s" %(Line)
+	print ("Getting %s" %(Line))
 	GBSeq = Entrez.efetch(db="nucleotide", rettype="gb", retmode="text", id=Line) #Get the sequence
 	
 	for Sequence in SeqIO.parse(GBSeq, "gb"):			#Parse though each
 		# Print some summary info about the sequence.
-		print Sequence.id, Sequence.description[:50] + "..."
-		print "Sequence length %i," % len(Sequence),
-		print "%i features," % len(Sequence.features),
-		print "from: %s" % Sequence.annotations["source"]
+		print (Sequence.id, Sequence.description[:50] + "...")
+		print ("Sequence length %i," % len(Sequence))
+		print( "%i features," % len(Sequence.features))
+		print ("from: %s" % Sequence.annotations["source"])
 		
-		print "Parsing CDSs...\n\n"
+		print ("Parsing CDSs...\n\n")
 		
 		Sample_gene_dict={} #Clear the dict for tracking genes found in each sample.
 		# Look at the CDSs and extract them
@@ -107,7 +109,7 @@ for Line in IN:
 						
 					except: #If we still can't get it, put in unknown.
 						Gene= "unknown"
-						print "Unable to parse gene name from CDS, putting in unknown file."
+						print ("Unable to parse gene name from CDS, putting in unknown file.")
 				
 				Gene=Gene.replace(" ", "_") #Clean up the name, replacing any spaces with underscores.
 				
@@ -127,12 +129,12 @@ for Line in IN:
 					try:
 						OUT=open(GeneFile, 'a')
 					except IOError:
-						print "Can't open file to append", GeneFile
+						print ("Can't open file to append", GeneFile)
 					
 					try:
 						OUTAA=open(GeneFileAA, 'a')
 					except IOError:
-						print "Can't open file to append", GeneFileAA
+						print ("Can't open file to append", GeneFileAA)
 					
 					############
 					# Manage getting flanking regions.
@@ -182,7 +184,7 @@ for Line in IN:
 					try:	
 						SeqNuc=Feature.extract(Sequence)		#Get the nucleotide sequence for the CDS	
 					except:
-						print "Can't get sequence for ", Gene	#Handle problems.
+						print ("Can't get sequence for ", Gene)	#Handle problems.
 					
 					SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0], IUPAC.protein), id=Sequence.id, description=Sequence.description)
 					
@@ -212,7 +214,7 @@ for Line in IN:
 						SeqIO.write(SeqAA, OUTAA, "fasta")
 					
 					elif Gene != "unknown" and (Sample_gene_dict[Gene.lower()] > 1 and ExclDups == 1):	#If there's multiple copies and we don't want them reported, let the user know.
-						print "Copy %s of %s being excluded for %s" %(str(Sample_gene_dict[Gene.lower()]), Gene_dict[Gene.lower()], SeqNuc.id)
+						print ("Copy %s of %s being excluded for %s" %(str(Sample_gene_dict[Gene.lower()]), Gene_dict[Gene.lower()], SeqNuc.id))
 						
 					else:
 						
@@ -227,4 +229,4 @@ for Line in IN:
 						SeqIO.write(SeqNuc, OUT, "fasta")	# Write that to the file in fasta format.
 						SeqIO.write(SeqAA, OUTAA, "fasta")
 				else:
-					print "Skipping ", Gene #Let the user know an orf was skipped.
+					print ("Skipping ", Gene )#Let the user know an orf was skipped.
