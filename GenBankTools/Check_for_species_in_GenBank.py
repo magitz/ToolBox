@@ -27,7 +27,7 @@ import time
 #####################
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", help="input file with GenBank accession IDs")
+parser.add_argument("-i", help="input file with species names")
 parser.add_argument("-e", help="email address")
 parser.add_argument("-o", help="output folder name")
 
