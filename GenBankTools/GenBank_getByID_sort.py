@@ -5,7 +5,7 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqFeature
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
+#from Bio.Alphabet import IUPAC --removed from Bio: https://biopython.org/wiki/Alphabet 
 import os
 import time
 
