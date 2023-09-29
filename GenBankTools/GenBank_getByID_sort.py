@@ -16,8 +16,9 @@ import time
 #
 #  Matt Gitzendanner
 #  University of Florida
-#  03/08/16
+#  09/29/23
 #
+# Version 1.2: Update for python 3
 # Version 1.1: Added option to sort (try to sort by gene) or not sort (just download everything)
 # Version 1.0: Initial version based on GenBank_parser.py
 # =====================================================
@@ -47,12 +48,12 @@ SortByGene= args.s
 try:
 	IN=open(infile, 'r')
 except IOError:
-	print "Can't open file", infile
+	print ("Can't open file", infile)
 
 			 
 for Line in IN:
 	GInumber=Line.strip('\n')
-	print "Getting %s" %(GInumber)
+	print ("Getting %s" %(GInumber))
 	
 	
 	for i in range(3, 0, -1):
@@ -74,13 +75,15 @@ for Line in IN:
 	#  the sequence description below. If matched, the sequences are added to a fasta file with that 
 	#  gene's name. If not matched, the sequence is added to a fasta file call All_others.fna. 
 	
+	# 9/29/23: Wow this is ugly! Sorry for my old self...
+	
 	if SortByGene == 1:
 		for Sequence in SeqIO.parse(GBSeq, "gb"):			#Parse though each
 			# Print some summary info about the sequence.
-			print Sequence.id, Sequence.description[:50] + "..."
-			print "Sequence length %i," % len(Sequence),
-			print "%i features," % len(Sequence.features),
-			print "from: %s" % Sequence.annotations["source"]
+			print (Sequence.id, Sequence.description[:50] + "...")
+			print ("Sequence length %i," % len(Sequence))
+			print ("%i features," % len(Sequence.features))
+			print ("from: %s" % Sequence.annotations["source"])
 	
 			if "trnL-trnF" in Sequence.description:
 				GeneFile=os.path.join(OutDir, "trnL-trnF_intergenic_spacer.fna")
@@ -88,7 +91,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -97,7 +100,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -106,7 +109,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -115,7 +118,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -124,7 +127,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -133,7 +136,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -142,7 +145,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -151,7 +154,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -160,7 +163,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -170,7 +173,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -179,7 +182,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 			
@@ -188,7 +191,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 
@@ -197,7 +200,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 					
@@ -206,7 +209,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 			elif "rps16" in Sequence.description or "rpS16" in Sequence.description:
@@ -214,7 +217,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 
@@ -223,7 +226,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 
@@ -232,7 +235,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -242,7 +245,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -251,7 +254,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -260,7 +263,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -270,7 +273,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 	
@@ -279,7 +282,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -288,7 +291,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -297,7 +300,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")	
 		
@@ -306,7 +309,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
@@ -315,7 +318,7 @@ for Line in IN:
 				try:
 					OUT=open(GeneFile, 'a')
 				except IOError:
-					print "Can't open file to append", GeneFile
+					print ("Can't open file to append", GeneFile)
 		
 				SeqIO.write(Sequence, OUT, "fasta")
 		
