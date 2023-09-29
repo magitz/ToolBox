@@ -12,7 +12,8 @@ import time
 #
 #  Matt Gitzendanner
 #  University of Florida
-#  3/07/16
+#  9/29/23 Version 1.1: Update prints for python3
+#  3/07/16 Version 1.0
 #
 # =====================================================
 
@@ -46,7 +47,7 @@ def is_non_zero_file(fpath):
 try:
 	IN=open(infile, 'r')
 except IOError:
-	print "Can't open file", infile
+	print ("Can't open file", infile)
 
 for Line in IN:
 	Line=Line.strip('\n')
@@ -60,7 +61,7 @@ for Line in IN:
 	else:
 	
 		for i in range(3, 0, -1):
- 			try:
+			try:
 				GBSeq = Entrez.esearch(db="nucleotide", term=Organism ) #Get the sequence
 				
 			except:
