@@ -5,7 +5,7 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqFeature
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
+#from Bio.Alphabet import IUPAC
 
 # =====================================================
 #  Takes input of list of NCBI record IDs to fetch. 
@@ -186,7 +186,7 @@ for Line in IN:
 					except:
 						print ("Can't get sequence for ", Gene)	#Handle problems.
 					
-					SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0], IUPAC.protein), id=Sequence.id, description=Sequence.description)
+					SeqAA=SeqRecord(Seq(Feature.qualifiers['translation'][0]), id=Sequence.id, description=Sequence.description)
 					
 					#For some reason many are returning Unknown IDs and Descriptions. Fix these.
 					if SeqNuc.id == '<unknown id>':
